@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import Keys from './components/Keys';
+import Display from './components/Display';
 
-function App() {
+class App extends Component {
+  state = {
+    value: ''
+  }
+  keyTriggerd = trigger => {
+    if (trigger === "="){
+      this.calc();
+    } else if (trigger === 'C'){
+      this.clear()
+    } else if(trigger === 'CE'){
+      this.delete();
+    } else
+    this.setState({
+      value: this.state.value + trigger
+    });
+  };
+
+  delete = () => {
+    this.setState({
+      value: this.state.value.slice(0, 1)
+    })
+  }
+clear = () => {
+  this.setState({
+    value: ""
+  })
+};
+
+  calc = () =>  {
+  try {this.setState({value: (eval(this.state.value) || "") + ""
+    });
+  } catch(e){
+    this.setState({
+      value: 'error'
+    });
+  }
+};
+      
+
+    
+
+
+  render() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className="body">
+      <Display value={this.state.value}/>
+       <Keys keyTriggerd={this.keyTriggerd}/>
+     </div>
+     </div>
   );
+}
 }
 
 export default App;
